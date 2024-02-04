@@ -15,6 +15,16 @@ const BillingInfo = () => {
 
   const navigate = useNavigate();
 
+  const [homeChecked, setHomeChecked] = useState(true);
+  const [officeChecked, setOfficeChecked] = useState(false);
+
+  const [standardChecked, setStandardChecked] = useState(true);
+  const [expressChecked, setExpressChecked] = useState(false);
+
+  const [paypalChecked, setPaypalChecked] = useState(false);
+  const [creditChecked, setCreditChecked] = useState(true);
+  const [transferChecked, setTransferChecked] = useState(false);
+
   const [firstName, setFirstName] = useState('');
   const [validFirstName, setValidFirstName] = useState(false);
 
@@ -30,13 +40,13 @@ const BillingInfo = () => {
   const [country, setCountry] = useState('');
   const [address, setAddress] = useState('');
 
-  const [city, setCity] = useState(''); 
-  const [state, setState] = useState(''); 
+  const [city, setCity] = useState('');
+  const [state, setState] = useState('');
 
-  const [zip, setZip] = useState(''); 
+  const [zip, setZip] = useState('');
   const [cardNumber, setCardNumber] = useState('');
 
-  const [nameOnCard, setNameOnCard] = useState(''); 
+  const [nameOnCard, setNameOnCard] = useState('');
   const [expiryDate, setExpiryDate] = useState('');
 
   const [cvv, setCvv] = useState('');
@@ -49,6 +59,7 @@ const BillingInfo = () => {
 
   useEffect(() => {
     setValidEmail(EMAIL_REGEX.test(email));
+    // document.getElementById('home').checked = false;
   }, [email, EMAIL_REGEX])
 
   useEffect(() => {
@@ -57,9 +68,9 @@ const BillingInfo = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     const payload = { firstName, lastName, email, phone, address, city, state, zip, country, cardNumber, nameOnCard, expiryDate, cvv }
-  
+
     console.log(payload)
     try {
       const response = await axios.post('/post-billing-info',
@@ -73,9 +84,9 @@ const BillingInfo = () => {
       );
       console.log(JSON.stringify(response?.data));
       navigate("/invoices");
-  
+
     } catch (err) {
-    console.log(err);
+      console.log(err);
     }
   }
 
@@ -283,7 +294,16 @@ const BillingInfo = () => {
                     <div className="home">
                       <div className="checkbox">
                         <div className="form-group">
-                          <input type="radio" id="home" name="home" checked="checked" />
+                          <input
+                            type="radio"
+                            id="home"
+                            name="home"
+                            checked={homeChecked}
+                            onChange={() => {
+                              setHomeChecked(!homeChecked);
+                              setOfficeChecked(false); // Uncheck the "Office" radio button
+                            }}
+                          />
                           <label htmlFor="homeAddress">Home</label>
                           <span><FontAwesomeIcon icon={faEdit} /></span>
                         </div>
@@ -298,7 +318,16 @@ const BillingInfo = () => {
                     <div className="office">
                       <div className="checkbox">
                         <div className="form-group">
-                          <input type="radio" id="office" name="office" />
+                          <input
+                            type="radio"
+                            id="office"
+                            name="office"
+                            checked={officeChecked}
+                            onChange={() => {
+                              setOfficeChecked(!officeChecked);
+                              setHomeChecked(false); // Uncheck the "Home" radio button
+                            }}
+                          />
                           <label htmlFor="officeAddress">Office</label>
                           <span><FontAwesomeIcon icon={faEdit} /></span>
                         </div>
@@ -319,7 +348,16 @@ const BillingInfo = () => {
                     <div className="delivery">
                       <div className="standard">
                         <div className="form-group">
-                          <input type="radio" id="standard" name="standard" checked="checked" />
+                          <input
+                            type="radio"
+                            id="standard"
+                            name="standard"
+                            checked={standardChecked}
+                            onChange={() => {
+                              setStandardChecked(!standardChecked);
+                              setExpressChecked(false); // Uncheck the "Office" radio button
+                            }}
+                          />
                           <label htmlFor="express">Standard Delivery - FREE</label>
                         </div>
                         <div className="delivery-info">
@@ -328,7 +366,16 @@ const BillingInfo = () => {
                       </div>
                       <div className="express">
                         <div className="form-group">
-                          <input type="radio" id="express" name="express" />
+                          <input
+                            type="radio"
+                            id="express"
+                            name="express"
+                            checked={expressChecked}
+                            onChange={() => {
+                              setExpressChecked(!expressChecked);
+                              setStandardChecked(false); // Uncheck the "Office" radio button
+                            }}
+                          />
                           <label htmlFor="express">Express Delivery - PAID</label>
                         </div>
                         <div className="delivery-info">
@@ -388,7 +435,16 @@ const BillingInfo = () => {
                     <div className="payment-method">
                       <div className="paypal">
                         <div className="form-group">
-                          <input type="radio" id="paypal" name="paypal" />
+                          <input
+                            type="radio"
+                            id="paypal"
+                            name="paypal"
+                            checked={paypalChecked}
+                            onChange={() => {
+                              setPaypalChecked(!paypalChecked);
+                              setCreditChecked(false);
+                            }}
+                          />
                           <label htmlFor="paypal">Pay with Paypal</label>
                         </div>
                         <div className="delivery-info">
@@ -397,7 +453,17 @@ const BillingInfo = () => {
                       </div>
                       <div className="credit-card">
                         <div className="form-group">
-                          <input type="radio" id="credit-card" name="credit-card" checked="checked" />
+                          <input
+                            type="radio"
+                            id="credit-card"
+                            name="credit-card"
+                            checked={creditChecked}
+                            onChange={() => {
+                              setCreditChecked(!creditChecked);
+                              setPaypalChecked(false);
+                              setTransferChecked(false);
+                            }}
+                          />
                           <label htmlFor="credit-card">Credit / Debit Card</label>
                         </div>
                         <div className="delivery-info credit-crd">
@@ -420,13 +486,22 @@ const BillingInfo = () => {
                           </div>
                           <div className="form-group-3">
                             <label htmlFor="zip">CVV Code:</label>
-                            <input type="text" id="zip" name="zip" placeholder="012" onChange={(e) => setCvv(e.target.value)}  />
+                            <input type="text" id="zip" name="zip" placeholder="012" onChange={(e) => setCvv(e.target.value)} />
                           </div>
                         </div>
                       </div>
                       <div className="bank-transfer">
                         <div className="form-group frm">
-                          <input type="radio" id="bank-transfer" name="bank-transfer" />
+                          <input
+                            type="radio"
+                            id="bank-transfer"
+                            name="bank-transfer"
+                            checked={transferChecked}
+                            onChange={() => {
+                              setTransferChecked(!transferChecked);
+                              setCreditChecked(false);
+                            }}
+                          />
                           <label htmlFor="bank-transfer">Bank Transfer</label>
                         </div>
                         <h2>Bank Details: 00012345678965 ZENITH BANK</h2>
