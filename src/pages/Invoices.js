@@ -10,7 +10,6 @@ const Invoices = () => {
   const [itemsPerPage] = useState(8);
 
   useEffect(() => {
-    console.log('here');
     const getInvoices = async () => {
       try {
         const response = await axios.get('/invoices');
