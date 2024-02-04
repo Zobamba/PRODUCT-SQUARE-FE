@@ -443,6 +443,7 @@ const BillingInfo = () => {
                             onChange={() => {
                               setPaypalChecked(!paypalChecked);
                               setCreditChecked(false);
+                              setTransferChecked(false);
                             }}
                           />
                           <label htmlFor="paypal">Pay with Paypal</label>
@@ -500,6 +501,7 @@ const BillingInfo = () => {
                             onChange={() => {
                               setTransferChecked(!transferChecked);
                               setCreditChecked(false);
+                              setPaypalChecked(false);
                             }}
                           />
                           <label htmlFor="bank-transfer">Bank Transfer</label>
